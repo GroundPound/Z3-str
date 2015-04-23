@@ -10,7 +10,7 @@
 
 (assert (= cookie  (str.++ cookie_part1 cookie_part2 cookie_part3) ) ) 
 
-(assert (str.in.re cookie_part2 (re.++ (re.union (str.to.re "?") (str.to.re ";") ) 
+(assert (str.in.re cookie_part2 (re.++ (re.union (str.to.re "\?") (str.to.re ";") ) 
                                        (str.to.re "searchLang=")
                                        (re.* (re.union (str.to.re "a") (str.to.re "b") (str.to.re "c") (str.to.re "d") (str.to.re "e") (str.to.re "f") (str.to.re "g") (str.to.re "h") (str.to.re "i") (str.to.re "j") (str.to.re "k") (str.to.re "l") (str.to.re "m") (str.to.re "n") ) )
                                 )

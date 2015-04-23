@@ -13,7 +13,7 @@
 
 (assert (= cookie  (Concat cookie_part1 (Concat cookie_part2 cookie_part3) ) ) )
 
-(assert (RegexIn cookie_part2 (RegexConcat (RegexConcat (RegexUnion (Str2Reg "?") (Str2Reg ";") ) 
+(assert (RegexIn cookie_part2 (RegexConcat (RegexConcat (RegexUnion (Str2Reg "\?") (Str2Reg ";") ) 
                                                         (Str2Reg "searchLang=") ) 
                                            (RegexStar (RegexUnion (Str2Reg "a") (RegexUnion (Str2Reg "b") (RegexUnion (Str2Reg "c") (RegexUnion (Str2Reg "d") (RegexUnion (Str2Reg "e") (RegexUnion (Str2Reg "f") (RegexUnion (Str2Reg "g") (RegexUnion (Str2Reg "h") (RegexUnion (Str2Reg "i") (RegexUnion (Str2Reg "j") (RegexUnion (Str2Reg "k") (RegexUnion (Str2Reg "l") (RegexUnion (Str2Reg "m") (Str2Reg "n") ) ) ) ) ) ) ) ) ) ) ) ) ) ) 
                               )
