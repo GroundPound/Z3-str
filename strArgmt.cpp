@@ -412,16 +412,17 @@ void processConcatEqType_1(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, m, x_t1));
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, y, t1_n));
 
+
       Z3_ast addItems[2];
       addItems[0] = mk_length(t, x);
       addItems[1] = mk_length(t, t1);
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, m), Z3_mk_add(ctx, 2, addItems)));
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_gt(ctx, mk_length(t, m), mk_length(t, x)));
-
 //      addItems[0] = mk_length(t, t1);
 //      addItems[1] = mk_length(t, n);
 //      and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, y), Z3_mk_add(ctx, 2, addItems)));
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_gt(ctx, mk_length(t, y), mk_length(t, n)));
+
 
       option++;
 
@@ -450,6 +451,7 @@ void processConcatEqType_1(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, x, m_t2));
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, n, t2_y));
 
+
       Z3_ast addItems[2];
       addItems[0] = mk_length(t, m);
       addItems[1] = mk_length(t, t2);
@@ -460,6 +462,7 @@ void processConcatEqType_1(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
 //      addItems[1] = mk_length(t, y);
 //      and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, n), Z3_mk_add(ctx, 2, addItems)));
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_gt(ctx, mk_length(t, n), mk_length(t, y)));
+
 
       option++;
 
@@ -480,8 +483,10 @@ void processConcatEqType_1(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
       or_item[option] = Z3_mk_eq(ctx, xorFlag, mk_int(ctx, option));
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, x, m));
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, y, n));
+
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, x), mk_length(t, m)));
       and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, y), mk_length(t, n)));
+
       option++;
     }
 
@@ -744,6 +749,7 @@ void processConcatEqType_2(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
         and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, m, x_temp1));
         and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, y, temp1_strAst));
 
+
         Z3_ast addItems[2];
         addItems[0] = mk_length(t, x);
         addItems[1] = mk_length(t, temp1);
@@ -790,6 +796,7 @@ void processConcatEqType_2(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
 //          addItems[1] = mk_int(ctx, part1Str.length());
 //          and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, x), Z3_mk_add(ctx, 2, addItems)));
 //        }
+
         and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, y), mk_int(ctx, part2Str.length())));
 
         // adding length constraint for _ = constStr seems slowing things down.
@@ -1079,6 +1086,7 @@ void processConcatEqType_3(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
         Z3_ast temp1_y = mk_concat(t, temp1, y);
         and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, x, strAst_temp1));
         and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, n, temp1_y));
+
 
         Z3_ast addItems[2];
         addItems[0] = mk_length(t, strAst);
@@ -1427,7 +1435,7 @@ void processConcatEqType_6(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
     Z3_ast commonVar_str2 = mk_concat(t, commonVar, str2Ast);
     and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, y, commonVar_str2));
 
-    //
+
     Z3_ast addItems[2];
     addItems[0] = mk_length(t, str1Ast);
     addItems[1] = mk_length(t, commonVar);
@@ -1458,6 +1466,7 @@ void processConcatEqType_6(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
     Z3_ast prefixAst = my_mk_str_value(t, prefix.c_str());
     Z3_ast x_eq_prefix = Z3_mk_eq(ctx, m, prefixAst);
     and_item[pos++] = Z3_mk_eq(ctx, or_item[option], x_eq_prefix);
+
     and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, m), mk_length(t, prefixAst)));
 
     // adding length constraint for _ = constStr seems slowing things down.
@@ -1465,7 +1474,9 @@ void processConcatEqType_6(Z3_theory t, Z3_ast concatAst1, Z3_ast concatAst2) {
     Z3_ast suffixAst = my_mk_str_value(t, suffix.c_str());
     Z3_ast y_eq_surfix = Z3_mk_eq(ctx, y, suffixAst);
     and_item[pos++] = Z3_mk_eq(ctx, or_item[option], y_eq_surfix);
+
     and_item[pos++] = Z3_mk_eq(ctx, or_item[option], Z3_mk_eq(ctx, mk_length(t, y), mk_length(t, suffixAst)));
+
     option++;
   }
 

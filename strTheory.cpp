@@ -744,6 +744,7 @@ Z3_ast getLengthAST(Z3_theory t, Z3_ast n) {
  *   - Else, return -1.
  */
 int getLenValue(Z3_theory t, Z3_ast n) {
+
   Z3_context ctx = Z3_theory_get_context(t);
   Z3_ast lenAst = getLengthAST(t, n);
   Z3_ast lenValueAst = Z3_theory_get_value_of_len(t, lenAst);
@@ -762,6 +763,7 @@ int getLenValue(Z3_theory t, Z3_ast n) {
     }
     return len;
   }
+
   return -1;
 }
 
@@ -1711,6 +1713,65 @@ Z3_ast simplifyConcat(Z3_theory t, Z3_ast node) {
     return resultAst;
   }
 }
+
+
+
+bool simplifyConcatToConst(Z3_theory t, Z3_ast node) {
+  bool nodeHasVal = false;
+  get_eqc_value(t, node, nodeHasVal);
+  if (nodeHasVal)
+    return true;
+
+  Z3_context ctx = Z3_theory_get_context(t);
+  std::map<Z3_ast, Z3_ast> resolvedMap;
+  std::vector<Z3_ast> argVec;
+  getNodesInConcat(t, node, argVec);
+
+  for (unsigned int i = 0; i < argVec.size(); i++) {
+    bool vArgHasEqcValue = false;
+    Z3_ast vArg = get_eqc_value(t, argVec[i], vArgHasEqcValue);
+    if (!vArgHasEqcValue) {
+      return false;
+    } else {
+      if (vArg != argVec[i]) {
+        resolvedMap[argVec[i]] = vArg;
+      }
+    }
+  }
+
+  Z3_ast resultAst = my_mk_str_value(t, "");
+  for (unsigned int i = 0; i < argVec.size(); i++) {
+    bool vArgHasEqcValue = false;
+    Z3_ast vArg = get_eqc_value(t, argVec[i], vArgHasEqcValue);
+    resultAst = mk_concat(t, resultAst, vArg);
+  }
+
+#ifdef DEBUGLOG
+  __debugPrint(logFile, ">>  ");
+  printZ3Node(t, node);
+  __debugPrint(logFile, "  is simplified to  ");
+  printZ3Node(t, resultAst);
+  __debugPrint(logFile, "\n");
+#endif
+
+  Z3_ast * items = new Z3_ast[resolvedMap.size()];
+  int pos = 0;
+  std::map<Z3_ast, Z3_ast>::iterator itor = resolvedMap.begin();
+  for (; itor != resolvedMap.end(); itor++) {
+    items[pos++] = Z3_mk_eq(ctx, itor->first, itor->second);
+  }
+  Z3_ast implyL = NULL;
+  if (pos == 1) {
+    implyL = items[0];
+  } else {
+    implyL = Z3_mk_and(ctx, pos, items);
+  }
+  Z3_ast implyR = Z3_mk_eq(ctx, node, resultAst);
+  Z3_ast toAdd = Z3_mk_implies(ctx, implyL, implyR);
+  addAxiom(t, toAdd, __LINE__);
+  return true;
+}
+
 
 /*
  *
@@ -3264,6 +3325,8 @@ int ctxDepAnalysis(Z3_theory t, std::map<Z3_ast, int> & strVarMap, std::map<Z3_a
   std::map<Z3_ast, Z3_ast> concats_eq_Index_map;
   std::map<Z3_ast, int>::iterator concatItor = concatMap.begin();
   for (; concatItor != concatMap.end(); concatItor++) {
+    simplifyConcatToConst(t, concatItor->first);
+
     if (concats_eq_Index_map.find(concatItor->first) != concats_eq_Index_map.end())
       continue;
 

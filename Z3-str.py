@@ -282,6 +282,12 @@ def genSolAsserts():
         result.append("(assert " + name + ")" + "\n")
       else:
         result.append("(assert (not " + name + "))" + "\n")
+    elif varTypeDict[name] == "int":
+        intv = int(value)
+        if intv < 0:
+          result.append("(assert (= " + name + " (- 0 %d"%(-intv) + ")))" + "\n")
+        else:
+          result.append("(assert (= " + name + " %d"%intv + "))" + "\n")        
     else:
       result.append("(assert (= " + name + " " + value + "))" + "\n")
   return ''.join(result)
@@ -348,6 +354,10 @@ if __name__ == '__main__':
     proc = subprocess.Popen(paras, stdout=PIPE, stderr=PIPE)
     child_pid = proc.pid
     (output, error) = proc.communicate()
+    if error != "":
+      print error
+      print "Exit..."
+      sys.exit(0)
     outStr, hasError = processOutput(output)
     
     if hasError == 1:      
