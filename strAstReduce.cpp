@@ -23,7 +23,6 @@ std::string encodeToEscape(char c) {
 
 void setAlphabet() {
   if (defaultCharSet) {
-    // a string in C notion cannot contain a char '\0'
     charSetSize = 255;
     charSet = new char[charSetSize];
     int idx = 0;
@@ -70,7 +69,7 @@ void setAlphabet() {
       idx++;
     }
     // non-printable - 1
-    for (int i = 1; i < 32; i++) {
+    for (int i = 0; i < 32; i++) {
       charSet[idx] = (char) i;
       charSetLookupTable[charSet[idx]] = idx;
       idx++;
