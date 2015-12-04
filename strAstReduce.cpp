@@ -23,7 +23,7 @@ std::string encodeToEscape(char c) {
 
 void setAlphabet() {
   if (defaultCharSet) {
-    charSetSize = 255;
+    charSetSize = 256;
     charSet = new char[charSetSize];
     int idx = 0;
     // small letters
